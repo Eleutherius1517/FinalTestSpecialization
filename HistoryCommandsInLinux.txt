@@ -54,14 +54,14 @@ sudo dpkg -r mysql-server-8.0
 6. Диаграмма классов
 В репозитории
 
-7.
-
+7. Работа с MySQL 
+В ранее подключенном MySQL создать базу данных с названием "Human Friends".
 sudo mysql
    >show databases;
    >CREATE DATABASE human_friends;
    >show databases;
 
-8.
+Создать таблицы, соответствующие иерархии из вашей диаграммы классов.
    >use human_friends;
    >CREATE TABLE 'animal'
   ->('id' Int NOT NULL AUTO_INCREMENT,
@@ -70,7 +70,8 @@ sudo mysql
    >SHOW TABLES;
 SQL код в DataSQL/Animals.SQL
 
-9.
+Заполнить таблицы данными о животных, их командах и датами рождения.
+
    >ALTER TABLE 'mule' ADD CONSTRAINT 'pack_to_mule' FOREIGN KEY ('id_pack') REFERENCES 'pack_animal' ('id') ON DELETE RESTRICT ON UPDATE RESTRICT;
    >INSERT INTO pack_animal (pack_name, livePlace, id_animal) VALUES ('Вьючные', 'Скотный двор', 1);
    >INSERT INTO cat (cat_name, date_birth, commands, 'color', id_home)
@@ -82,9 +83,13 @@ SQL код в DataSQL/Animals.SQL
    >SELECT * FROM dog;
    >SELECT * FROM hamster;
    >SELECT * FROM horse;
-10.
+
+Удалить записи о верблюдах 
+
    >DELETE FROM camel;
    >SELECT * FROM camel;
+
+объединить таблицы лошадей и ослов
 
    >SELECT id, name, commands, color, id_pack
   ->FROM horse
@@ -92,7 +97,8 @@ SQL код в DataSQL/Animals.SQL
   ->SELECT id, name, commands, color, id_pack
   ->FROM mule;
 
-11.
+Создать новую таблицу для животных в возрасте от 1 до 3 лет и вычислить их возраст с точностью до месяца.
+
    >CREATE TABLE 'young_animal'
   ->('id' Int NOT NULL,
   ->  'name' Varchar(50),
@@ -131,7 +137,8 @@ SQL код в DataSQL/Animals.SQL
 
    >SELECT * FROM young_animal;
 
-12.
+Объединить все созданные таблицы в одну, сохраняя информацию о принадлежности к исходным таблицам.
+
    >SELECT * FROM (SELECT id, cat_name, dog_name, NULL AS hamster_name, NULL AS name, date_birth, commands, color FROM (
   ->SELECT id, cat_name, NULL AS dog_name, NULL AS hamster_name, NULL AS name, date_birth, commands, color FROM cat
   ->UNION ALL
