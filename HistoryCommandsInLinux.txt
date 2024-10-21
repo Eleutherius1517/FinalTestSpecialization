@@ -48,3 +48,98 @@ sudo wget -c https://dev.mysql.com/get/mysql-apt-config_0.8.24-1_all.deb
 sudo dpkg -i mysql-apt-config_0.8.24-1_all.deb
 sudo dpkg -r mysql-server-8.0
 
+5. История команд в терминале Ubuntu
+Этот файл.
+
+6. Диаграмма классов
+В репозитории
+
+7.
+
+sudo mysql
+   >show databases;
+   >CREATE DATABASE human_friends;
+   >show databases;
+
+8.
+   >use human_friends;
+   >CREATE TABLE 'animal'
+  ->('id' Int NOT NULL AUTO_INCREMENT,
+  ->  'animal_name' Varchar(20) NOT NULL,
+  ->  PRYMARY KEY ('id'));
+   >SHOW TABLES;
+SQL код в DataSQL/Animals.SQL
+
+9.
+   >ALTER TABLE 'mule' ADD CONSTRAINT 'pack_to_mule' FOREIGN KEY ('id_pack') REFERENCES 'pack_animal' ('id') ON DELETE RESTRICT ON UPDATE RESTRICT;
+   >INSERT INTO pack_animal (pack_name, livePlace, id_animal) VALUES ('Вьючные', 'Скотный двор', 1);
+   >INSERT INTO cat (cat_name, date_birth, commands, 'color', id_home)
+  ->VALUES
+  ->('Мурка', '2024-03-05', 'лапу', 'рыжий', 1),
+  ->('Мурзик', '2023-12-23', 'бегом', 'белый', 1),
+  ->('Мурка', '2022-11-15', 'смирно', 'черный', 1);
+   >SELECT * FROM cat;
+   >SELECT * FROM dog;
+   >SELECT * FROM hamster;
+   >SELECT * FROM horse;
+10.
+   >DELETE FROM camel;
+   >SELECT * FROM camel;
+
+   >SELECT id, name, commands, color, id_pack
+  ->FROM horse
+  ->UNION
+  ->SELECT id, name, commands, color, id_pack
+  ->FROM mule;
+
+11.
+   >CREATE TABLE 'young_animal'
+  ->('id' Int NOT NULL,
+  ->  'name' Varchar(50),
+  ->  'date_birth' DateTime,
+  ->  'commands' Varchar(50),
+  ->  'color' Varchar(50),
+  ->  'age' Varchar(50);
+
+   >INSERT INTO young_animal (id, name, date_birth, commands, color, age)
+  ->SELECT id, cat_name, date_birth, commands, color,
+  ->CONCAT(CAST(TIMESTAMPDIFF(YEAR, date_birth, NOW()) AS CHAR), "лет",
+  ->CAST(MOD(TIMESTAMPDIFF(MONTH, date_birth, NOW()), 12) AS CHAR), "мес.") AS age
+  ->FROM cat
+  ->WHERE TIMESTAMPDIFF(MONTH, date_birth, NOW()) BETWEEN 12 AND 36;
+
+   >INSERT INTO young_animal (id, name, date_birth, commands, color, age)
+  ->SELECT id, dog_name, date_birth, commands, color,
+  ->CONCAT(CAST(TIMESTAMPDIFF(YEAR, date_birth, NOW()) AS CHAR), "лет",
+  ->CAST(MOD(TIMESTAMPDIFF(MONTH, date_birth, NOW()), 12) AS CHAR), "мес.") AS age
+  ->FROM dog
+  ->WHERE TIMESTAMPDIFF(MONTH, date_birth, NOW()) BETWEEN 12 AND 36;
+
+   >INSERT INTO young_animal (id, name, date_birth, commands, color, age)
+  ->SELECT id, name, date_birth, commands, color,
+  ->CONCAT(CAST(TIMESTAMPDIFF(YEAR, date_birth, NOW()) AS CHAR), "лет",
+  ->CAST(MOD(TIMESTAMPDIFF(MONTH, date_birth, NOW()), 12) AS CHAR), "мес.") AS age
+  ->FROM horse
+  ->WHERE TIMESTAMPDIFF(MONTH, date_birth, NOW()) BETWEEN 12 AND 36
+  ->UNION ALL
+   >INSERT INTO young_animal (id, name, date_birth, commands, color, age)
+  ->SELECT id, name, date_birth, commands, color,
+  ->CONCAT(CAST(TIMESTAMPDIFF(YEAR, date_birth, NOW()) AS CHAR), "лет",
+  ->CAST(MOD(TIMESTAMPDIFF(MONTH, date_birth, NOW()), 12) AS CHAR), "мес.") AS age
+  ->FROM mule
+  ->WHERE TIMESTAMPDIFF(MONTH, date_birth, NOW()) BETWEEN 12 AND 36;
+
+   >SELECT * FROM young_animal;
+
+12.
+   >SELECT * FROM (SELECT id, cat_name, dog_name, NULL AS hamster_name, NULL AS name, date_birth, commands, color FROM (
+  ->SELECT id, cat_name, NULL AS dog_name, NULL AS hamster_name, NULL AS name, date_birth, commands, color FROM cat
+  ->UNION ALL
+  ->SELECT id, NULL AS cat_name, dog_name, NULL AS hamster_name, NULL AS name, date_birth, commands, color FROM dog) A
+  ->UNION ALL
+  ->SELECT id, NULL AS cat_name, NULL AS dog_name, hamster_name, NULL AS name, date_birth, commands, color FROM hamster) B
+  ->UNION ALL
+  ->SELECT * FROM (
+  ->SELECT id, NULL AS cat_name, NULL AS dog_name, NULL AS hamster_name, name, date_birth, commands, color FROM horse
+  ->UNION ALL
+  ->SELECT id, NULL AS cat_name, NULL AS dog_name, NULL AS hamster_name, name, date_birth, commands, color FROM mule ) C;
